@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fRender — Deterministic Audio → Video Publishing</title>
+  <meta name="description" content="fRender turns audio files into MP4 videos using a static cover image. 1 FPS, batch export, offline. No surprises." />
+  <meta property="og:title" content="fRender — Deterministic Audio → Video Publishing" />
+  <meta property="og:description" content="Static cover. 1 FPS. Batch export. No surprises. Free early release." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://frender.app" />
+  <meta property="og:site_name" content="fRender" />
+  <meta property="og:image" content="https://frender.app/og.png" />
+  <meta property="og:image:alt" content="fRender landing page preview" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="fRender — Deterministic Audio → Video Publishing" />
+  <meta name="twitter:description" content="Static cover. 1 FPS. Batch export. No surprises. Free early release." />
+  <meta name="twitter:image" content="https://frender.app/og.png" />
+  <meta name="theme-color" content="#080a0e" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0c10'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='monospace' font-size='17' font-weight='700' fill='%23c8d8f0'%3Ef%3C/text%3E%3C/svg%3E" />
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #080a0e;
+      --bg-mid:      #0d1018;
+      --bg-panel:    #111520;
+      --bg-panel2:   #161c2c;
+      --line:        rgba(255,255,255,0.07);
+      --line-strong: rgba(255,255,255,0.12);
+
+      --text-1: #e8edf8;
+      --text-2: #8a96b0;
+      --text-3: #7a86a1;
+
+      --accent:      #4f8ef7;
+      --accent-dim:  rgba(79,142,247,0.12);
+      --accent-glow: rgba(79,142,247,0.25);
+
+      --green:       #3ecf8e;
+      --green-dim:   rgba(62,207,142,0.10);
+
+      --radius-sm:  6px;
+      --radius-md:  10px;
+      --radius-lg:  16px;
+
+      --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+                     "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      --font-mono:   "SF Mono", "Menlo", "Consolas", "Courier New", monospace;
+
+      /* spacing scale: 8 12 16 24 32 48 64 96 128 */
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font-system);
+      background: var(--bg);
+      color: var(--text-1);
+      line-height: 1.6;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    /* ─── Container ─────────────────────────────────────────────────── */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── Typography ────────────────────────────────────────────────── */
+    h1, h2, h3 {
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 5.5vw, 4rem);
+      color: var(--text-1);
+      letter-spacing: -0.03em;
+    }
+
+    h2 {
+      font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+      color: var(--text-1);
+    }
+
+    h3 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 24px;
+    }
+
+    /* ─── Nav ───────────────────────────────────────────────────────── */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--line);
+      background: rgba(8,10,14,0.88);
+      backdrop-filter: saturate(180%) blur(16px);
+      -webkit-backdrop-filter: saturate(180%) blur(16px);
+    }
+
+    .nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      --logo-text-height: 15px;
+      --logo-mark-height: calc(var(--logo-text-height) * 1.618);
+      font-weight: 700;
+      font-size: var(--logo-text-height);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--text-1);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-logo-mark {
+      width: var(--logo-mark-height);
+      height: var(--logo-mark-height);
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .nav-logo-mark .brand-mark {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .nav-logo-mark .brand-mark-bar {
+      fill: #5aa7ff;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.85rem;
+      color: var(--text-2);
+      text-decoration: none;
+      transition: color 0.15s;
+      min-height: 32px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .nav-links a:hover { color: var(--text-1); }
+    .nav-links a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+      border-radius: 6px;
+    }
+
+    .nav-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: var(--green-dim);
+      border: 1px solid rgba(62,207,142,0.2);
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+
+    /* ─── Hero ──────────────────────────────────────────────────────── */
+    .hero {
+      padding: 144px 0 96px;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: min(700px, calc(100vw - 32px)); height: 500px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(79,142,247,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+
+    .hero-eyebrow-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hero h1 {
+      max-width: 720px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--text-2);
+      max-width: 480px;
+      margin-bottom: 48px;
+      line-height: 1.7;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-system);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.12s;
+      min-height: 48px;
+      white-space: nowrap;
+    }
+
+    .btn:active { transform: scale(0.98); }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover { opacity: 0.88; }
+
+    .btn-secondary {
+      background: var(--bg-panel);
+      color: var(--text-1);
+      border-color: var(--line-strong);
+    }
+
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.22); background: var(--bg-panel2); }
+
+    .hero-note {
+      font-size: 0.8rem;
+      color: var(--text-3);
+      letter-spacing: 0.01em;
+    }
+
+    .hero-note span {
+      color: var(--text-2);
+    }
+
+    /* ─── Divider ───────────────────────────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: var(--line);
+    }
+
+    /* ─── Section shell ─────────────────────────────────────────────── */
+    section {
+      padding: 80px 0;
+    }
+
+    /* ─── Download ──────────────────────────────────────────────────── */
+    .download-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 600px) {
+      .download-grid { grid-template-columns: 1fr; }
+    }
+
+    .download-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+
+    .download-card-os {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .os-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--bg-panel2);
+      border: 1px solid var(--line-strong);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .os-icon svg { display: block; }
+
+    .download-card-os-label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+
+    .download-card-os-sub {
+      font-size: 0.75rem;
+      color: var(--text-3);
+      margin-top: 1px;
+    }
+
+    .download-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .download-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      min-height: 44px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-panel2);
+      border: 1px solid var(--line);
+      text-decoration: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .download-link:hover {
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .download-link:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .download-link-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-1);
+    }
+
+    .download-link-arrow {
+      color: var(--text-3);
+      font-size: 0.8rem;
+      transition: color 0.15s;
+    }
+
+    .download-link:hover .download-link-arrow { color: var(--accent); }
+
+    .download-meta {
+      margin-top: 12px;
+      font-size: 0.75rem;
+      color: var(--text-3);
+      line-height: 1.6;
+    }
+
+    .download-footer-note {
+      font-size: 0.78rem;
+      color: var(--text-3);
+      text-align: center;
+    }
+
+    .download-footer-note a {
+      color: var(--text-2);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .download-footer-note a:hover { color: var(--text-1); }
+
+    /* ─── What / Who grid ───────────────────────────────────────────── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+    }
+
+    @media (max-width: 680px) {
+      .two-col { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    .fact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .fact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .fact-item:last-child { border-bottom: none; }
+
+    .fact-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: grid;
+      place-items: center;
+    }
+
+    .fact-icon-check { color: var(--green); }
+    .fact-icon-cross  { color: var(--text-3); }
+
+    .fact-text {
+      font-size: 0.9rem;
+      color: var(--text-2);
+      line-height: 1.55;
+    }
+
+    /* ─── Who it's for ──────────────────────────────────────────────── */
+    .who-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .who-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 20px;
+    }
+
+    .who-label {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-1);
+    }
+
+    .who-sub {
+      font-size: 0.75rem;
+      color: var(--text-3);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* ─── Engineering promises ──────────────────────────────────────── */
+    .promises-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    @media (max-width: 640px) {
+      .promises-row { grid-template-columns: 1fr; }
+    }
+
+    .promise-cell {
+      background: var(--bg-panel);
+      padding: 28px 24px;
+    }
+
+    .promise-cell + .promise-cell {
+      border-left: 1px solid var(--line);
+    }
+
+    @media (max-width: 640px) {
+      .promise-cell + .promise-cell {
+        border-left: none;
+        border-top: 1px solid var(--line);
+      }
+    }
+
+    .promise-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-1);
+      margin-bottom: 6px;
+    }
+
+    .promise-desc {
+      font-size: 0.78rem;
+      color: var(--text-3);
+      line-height: 1.55;
+    }
+
+    .promise-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    /* ─── Support / Logs ────────────────────────────────────────────── */
+    .support-block {
+      background: var(--bg-panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+    }
+
+    .support-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 560px) {
+      .support-cols { grid-template-columns: 1fr; gap: 24px; }
+      .support-block { padding: 28px 20px; }
+    }
+
+    .support-os-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 10px;
+    }
+
+    .support-path {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-2);
+      background: var(--bg-panel2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .support-note {
+      margin-top: 24px;
+      font-size: 0.8rem;
+      color: var(--text-3);
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .support-note strong { color: var(--text-2); font-weight: 500; }
+
+    /* ─── Footer ────────────────────────────────────────────────────── */
+    footer {
+      padding: 48px 0 40px;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .footer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-brand {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-2);
+    }
+
+    .footer-nav {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .footer-nav a {
+      font-size: 0.82rem;
+      color: var(--text-3);
+      text-decoration: none;
+      transition: color 0.15s;
+      min-height: 32px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .footer-nav a:hover { color: var(--text-1); }
+    .footer-nav a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+      border-radius: 6px;
+    }
+
+    .footer-copy {
+      font-size: 0.75rem;
+      color: var(--text-3);
+    }
+
+    @media (max-width: 560px) {
+      .container { padding: 0 16px; }
+      .nav-inner {
+        padding: 0 16px;
+        height: 48px;
+      }
+      .nav-links { gap: 10px; }
+      .nav-badge { display: none; }
+      .hero { padding: 124px 0 72px; }
+      section { padding: 64px 0; }
+    }
+
+    /* ─── Utility ───────────────────────────────────────────────────── */
+    .mt-8  { margin-top: 8px; }
+    .mt-16 { margin-top: 16px; }
+    .mt-24 { margin-top: 24px; }
+    .mt-32 { margin-top: 32px; }
+    .mb-8  { margin-bottom: 8px; }
+    .mb-16 { margin-bottom: 16px; }
+    .mb-24 { margin-bottom: 24px; }
+    .mb-32 { margin-bottom: 32px; }
+  </style>
+</head>
+<body id="top">
+
+  <!-- ─── Nav ──────────────────────────────────────────────────── -->
+  <nav class="site-nav" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="#top" class="nav-logo" aria-label="fRender home">
+        <div class="nav-logo-mark" aria-hidden="true">
+          <svg class="brand-mark" viewBox="220 210 560 580" focusable="false" aria-hidden="true">
+            <rect class="brand-mark-bar" x="256" y="378" width="72" height="244" rx="36" />
+            <rect class="brand-mark-bar" x="360" y="288" width="72" height="424" rx="36" />
+            <rect class="brand-mark-bar" x="464" y="230" width="72" height="540" rx="36" />
+            <rect class="brand-mark-bar" x="568" y="288" width="72" height="424" rx="36" />
+            <rect class="brand-mark-bar" x="672" y="378" width="72" height="244" rx="36" />
+          </svg>
+        </div>
+        fRender
+      </a>
+      <ul class="nav-links">
+        <li><a href="#download">Download</a></li>
+        <li><a href="#support">Support</a></li>
+        <li><span class="nav-badge">Early Release</span></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ─── Hero ─────────────────────────────────────────────────── -->
+  <main>
+    <div class="container">
+      <section class="hero" aria-labelledby="hero-headline">
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-dot" aria-hidden="true"></span>
+          Free for the first 30 days
+        </div>
+        <h1 id="hero-headline">
+          Deterministic audio<br>
+          <span>→</span> video publishing.
+        </h1>
+        <p class="hero-sub">
+          Static cover. 1&nbsp;FPS. Batch export.<br>No surprises.
+        </p>
+        <div class="hero-cta">
+          <a href="#download" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 1a5.5 5.5 0 0 1 3.91 9.39c.28.14.55.3.79.48A7 7 0 1 0 8 15a6.97 6.97 0 0 0 4.7-1.81 4.5 4.5 0 0 0-.79-.48A5.5 5.5 0 1 1 8 1z" fill="currentColor"/>
+              <path d="M7.25 9.56V4.5h1.5v5.06l1.72-1.72 1.06 1.06L8 12.44l-3.53-3.54 1.06-1.06 1.72 1.72z" fill="currentColor"/>
+            </svg>
+            Download for Mac
+          </a>
+          <a href="#download" class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M7.25 9.56V4.5h1.5v5.06l1.72-1.72 1.06 1.06L8 12.44l-3.53-3.54 1.06-1.06 1.72 1.72z" fill="currentColor"/>
+            </svg>
+            Download for Windows
+          </a>
+        </div>
+        <p class="hero-note">
+          <span>Requires a cover image.</span>&ensp;Fully offline.&ensp;Publish-grade output.
+        </p>
+      </section>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── Download ──────────────────────────────────────────────── -->
+    <section id="download" aria-labelledby="download-heading">
+      <div class="container">
+        <h3 id="download-heading">Download</h3>
+        <div class="download-grid">
+
+          <!-- Mac -->
+          <div class="download-card">
+            <div class="download-card-os">
+              <div class="os-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M17.05 12.54c-.03-2.64 2.16-3.92 2.26-3.98a4.9 4.9 0 0 0-3.86-2.09c-1.64-.17-3.2.97-4.03.97-.84 0-2.13-.95-3.5-.92a5.13 5.13 0 0 0-4.32 2.64c-1.84 3.2-.47 7.93 1.32 10.53.88 1.27 1.92 2.69 3.28 2.64 1.32-.05 1.82-.85 3.41-.85 1.59 0 2.04.85 3.43.83 1.42-.03 2.32-1.29 3.18-2.57a11.18 11.18 0 0 0 1.44-2.97 4.76 4.76 0 0 1-2.61-4.24z" fill="#e8edf8" opacity=".7"/>
+                  <path d="M15.37 4.47A4.68 4.68 0 0 0 16.54 1a4.75 4.75 0 0 0-3.08 1.59 4.44 4.44 0 0 0-1.1 3.21 3.93 3.93 0 0 0 3.01-1.33z" fill="#e8edf8" opacity=".5"/>
+                </svg>
+              </div>
+              <div>
+                <div class="download-card-os-label">macOS</div>
+                <div class="download-card-os-sub">macOS 11 or later</div>
+              </div>
+            </div>
+            <div class="download-links">
+              <a class="download-link"
+                 href="https://github.com/Rickeeh/Album-to-Video/releases/latest/download/fRender-1.0.0-mac-arm64.dmg">
+                <span class="download-link-label">Mac (Apple Silicon)</span>
+                <span class="download-link-arrow" aria-hidden="true">↓ .dmg</span>
+              </a>
+              <a class="download-link"
+                 href="https://github.com/Rickeeh/Album-to-Video/releases/latest/download/fRender-1.0.0-mac-x64.dmg">
+                <span class="download-link-label">Mac (Intel)</span>
+                <span class="download-link-arrow" aria-hidden="true">↓ .dmg</span>
+              </a>
+            </div>
+            <p class="download-meta">Open the .dmg and drag fRender to Applications.</p>
+          </div>
+
+          <!-- Windows -->
+          <div class="download-card">
+            <div class="download-card-os">
+              <div class="os-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M3 5.6L10.5 4.5V11.5H3V5.6z" fill="#e8edf8" opacity=".5"/>
+                  <path d="M11.5 4.35L21 3V11.5H11.5V4.35z" fill="#e8edf8" opacity=".7"/>
+                  <path d="M3 12.5H10.5V19.5L3 18.4V12.5z" fill="#e8edf8" opacity=".5"/>
+                  <path d="M11.5 12.5H21V21L11.5 19.65V12.5z" fill="#e8edf8" opacity=".7"/>
+                </svg>
+              </div>
+              <div>
+                <div class="download-card-os-label">Windows</div>
+                <div class="download-card-os-sub">Windows 10 / 11 (x64)</div>
+              </div>
+            </div>
+            <div class="download-links">
+              <a class="download-link"
+                 href="https://github.com/Rickeeh/Album-to-Video/releases/latest/download/fRender-1.0.0-win-x64-setup.exe">
+                <span class="download-link-label">Windows (Setup)</span>
+                <span class="download-link-arrow" aria-hidden="true">↓ .exe</span>
+              </a>
+              <a class="download-link"
+                 href="https://github.com/Rickeeh/Album-to-Video/releases/latest/download/fRender-1.0.0-win-x64-portable.exe">
+                <span class="download-link-label">Windows (Portable)</span>
+                <span class="download-link-arrow" aria-hidden="true">↓ .exe</span>
+              </a>
+            </div>
+            <p class="download-meta">Run Setup to install, or Portable to use directly — no install needed.</p>
+          </div>
+
+        </div>
+
+        <p class="download-footer-note">
+          SHA-256 checksums available on the
+          <a href="https://github.com/Rickeeh/Album-to-Video/releases/latest" target="_blank" rel="noopener">release page</a>.
+        </p>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ─── What it does / doesn't ───────────────────────────────── -->
+    <section aria-labelledby="what-heading">
+      <div class="container">
+        <div class="two-col">
+
+          <div>
+            <h3 id="what-heading">What it does</h3>
+            <div class="fact-list">
+              <div class="fact-item">
+                <div class="fact-icon fact-icon-check" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <p class="fact-text">Turns audio files into MP4 using a single static cover image.</p>
+              </div>
+              <div class="fact-item">
+                <div class="fact-icon fact-icon-check" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <p class="fact-text">Exports consistently (1&nbsp;FPS, CFR), ready to publish.</p>
+              </div>
+              <div class="fact-item">
+                <div class="fact-icon fact-icon-check" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <p class="fact-text">Batch workflows for albums, EPs, and episodes.</p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3>What it doesn't do</h3>
+            <div class="fact-list">
+              <div class="fact-item">
+                <div class="fact-icon fact-icon-cross" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M11 3L3 11M3 3l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <p class="fact-text">Not a video editor.</p>
+              </div>
+              <div class="fact-item">
+                <div class="fact-icon fact-icon-cross" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M11 3L3 11M3 3l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <p class="fact-text">No animations. No motion.</p>
+              </div>
+              <div class="fact-item">
+                <div class="fact-icon fact-icon-cross" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M11 3L3 11M3 3l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <p class="fact-text">No technical knobs — codecs, fps, or bitrates are handled automatically.</p>
+              </div>
+              <div class="fact-item">
+                <div class="fact-icon fact-icon-cross" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M11 3L3 11M3 3l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <p class="fact-text">No cloud dependency. Everything runs offline.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ─── Who it's for ─────────────────────────────────────────── -->
+    <section aria-labelledby="who-heading">
+      <div class="container">
+        <h3 id="who-heading">Who it's for</h3>
+        <div class="who-grid">
+          <div class="who-card">
+            <div class="who-label">Independent musicians</div>
+            <div class="who-sub">Publish singles and albums to platforms that require video.</div>
+          </div>
+          <div class="who-card">
+            <div class="who-label">Small labels</div>
+            <div class="who-sub">Batch export an entire release without manual work per track.</div>
+          </div>
+          <div class="who-card">
+            <div class="who-label">Podcasters</div>
+            <div class="who-sub">Convert episodes to MP4 for YouTube distribution.</div>
+          </div>
+          <div class="who-card">
+            <div class="who-label">Long-form audio creators</div>
+            <div class="who-sub">Audiobooks, lectures, and ambient content — ready to publish.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ─── Engineering promises ──────────────────────────────────── -->
+    <section aria-labelledby="engineering-heading">
+      <div class="container">
+        <h3 id="engineering-heading">Under the hood</h3>
+        <div class="promises-row">
+          <div class="promise-cell">
+            <div class="promise-dot" aria-hidden="true"></div>
+            <div class="promise-title">Deterministic render pipeline</div>
+            <p class="promise-desc">Same input always produces the same output. Vendored FFmpeg, pinned SHA-256.</p>
+          </div>
+          <div class="promise-cell">
+            <div class="promise-dot" aria-hidden="true"></div>
+            <div class="promise-title">Real cancel with full cleanup</div>
+            <p class="promise-desc">Cancellation kills the process tree and removes all partial files. No leftovers.</p>
+          </div>
+          <div class="promise-cell">
+            <div class="promise-dot" aria-hidden="true"></div>
+            <div class="promise-title">Crash-safe recovery</div>
+            <p class="promise-desc">A job ledger tracks in-progress exports. Interrupted jobs are cleaned up on next launch.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ─── Support / Logs ────────────────────────────────────────── -->
+    <section id="support" aria-labelledby="support-heading">
+      <div class="container">
+        <h3 id="support-heading">Support &amp; logs</h3>
+        <div class="support-block">
+          <h4 style="font-size:1.1rem; font-weight:600; color:var(--text-1); margin-bottom:6px;">Where are my log files?</h4>
+          <p style="font-size:0.85rem; color:var(--text-2);">If something goes wrong, log files and render reports contain everything needed to diagnose the issue.</p>
+
+          <div class="support-cols">
+            <div>
+              <div class="support-os-label">macOS</div>
+              <div class="support-path">
+                ~/Library/Logs/<br>
+                fRender/<br>
+                (legacy folder names may appear in current builds)
+              </div>
+            </div>
+            <div>
+              <div class="support-os-label">Windows</div>
+              <div class="support-path">
+                %APPDATA%\fRender\<br>
+                (legacy "Album to Video" subfolders may appear in current builds)
+              </div>
+            </div>
+          </div>
+
+          <p class="support-note">
+            You can also use <strong>Export Diagnostics</strong> inside fRender — it bundles all relevant logs and the latest render report into a single file, ready to share.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── Footer ───────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-brand">Built by Cudell Media Technologies.</div>
+          <nav aria-label="Footer links">
+            <ul class="footer-nav">
+              <li>
+                <a href="https://github.com/Rickeeh/Album-to-Video/releases" target="_blank" rel="noopener">Release notes</a>
+              </li>
+              <li>
+                <a href="#support">Support / Logs</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <p class="footer-copy">&copy; 2026 Cudell Media Technologies. fRender is an independent product.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
