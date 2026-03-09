@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>fRender — Deterministic Audio → Video Publishing</title>
-  <meta name="description" content="fRender turns audio files into MP4 videos using a static cover image. 1 FPS, batch export, offline. No surprises." />
-  <meta property="og:title" content="fRender — Deterministic Audio → Video Publishing" />
-  <meta property="og:description" content="Static cover. 1 FPS. Batch export. No surprises. Free early release." />
+  <title>fRender Free — Audio to Video for macOS</title>
+  <meta name="description" content="Render album videos from audio files. Fast and clean. fRender Free exports 1 file at a time. No setup. No accounts." />
+  <meta property="og:title" content="fRender Free — Audio to Video for macOS" />
+  <meta property="og:description" content="fRender Free exports 1 file at a time. No setup. No accounts. macOS for Apple Silicon and Intel." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://frender.app" />
   <meta property="og:site_name" content="fRender" />
   <meta property="og:image" content="https://frender.app/og.png" />
   <meta property="og:image:alt" content="fRender landing page preview" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="fRender — Deterministic Audio → Video Publishing" />
-  <meta name="twitter:description" content="Static cover. 1 FPS. Batch export. No surprises. Free early release." />
+  <meta name="twitter:title" content="fRender Free — Audio to Video for macOS" />
+  <meta name="twitter:description" content="fRender Free exports 1 file at a time. No setup. No accounts." />
   <meta name="twitter:image" content="https://frender.app/og.png" />
   <meta name="theme-color" content="#080a0e" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0c10'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='monospace' font-size='17' font-weight='700' fill='%23c8d8f0'%3Ef%3C/text%3E%3C/svg%3E" />
@@ -248,9 +248,21 @@
     .hero-sub {
       font-size: clamp(1rem, 2vw, 1.2rem);
       color: var(--text-2);
-      max-width: 480px;
-      margin-bottom: 48px;
+      max-width: 560px;
+      margin-bottom: 24px;
       line-height: 1.7;
+    }
+
+    .hero-bullets {
+      margin: 0 0 40px 0;
+      padding-left: 20px;
+      color: var(--text-2);
+      line-height: 1.8;
+      max-width: 420px;
+    }
+
+    .hero-bullets li {
+      font-size: 0.95rem;
     }
 
     .hero-cta {
@@ -258,7 +270,14 @@
       flex-wrap: wrap;
       gap: 12px;
       align-items: center;
-      margin-bottom: 24px;
+      margin-bottom: 0;
+    }
+
+    .hero-action-group {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
     }
 
     .btn {
@@ -301,9 +320,11 @@
     .btn-secondary:hover { border-color: rgba(255,255,255,0.22); background: var(--bg-panel2); }
 
     .hero-note {
+      margin: 0;
       font-size: 0.8rem;
       color: var(--text-3);
       letter-spacing: 0.01em;
+      text-align: center;
     }
 
     .hero-note span {
@@ -324,7 +345,7 @@
     /* ─── Download ──────────────────────────────────────────────────── */
     .download-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 16px;
       margin-bottom: 32px;
     }
@@ -450,6 +471,7 @@
       display: flex;
       flex-direction: column;
       gap: 0;
+      list-style: none;
     }
 
     .fact-item {
@@ -563,6 +585,18 @@
       border: 1px solid var(--line);
       border-radius: var(--radius-lg);
       padding: 40px;
+    }
+
+    .support-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-1);
+      margin-bottom: 6px;
+    }
+
+    .support-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-2);
     }
 
     .support-cols {
@@ -706,7 +740,6 @@
       <ul class="nav-links">
         <li><a href="#download">Download</a></li>
         <li><a href="#support">Support</a></li>
-        <li><span class="nav-badge">Early Release</span></li>
       </ul>
     </div>
   </nav>
@@ -717,33 +750,27 @@
       <section class="hero" aria-labelledby="hero-headline">
         <div class="hero-eyebrow">
           <span class="hero-eyebrow-dot" aria-hidden="true"></span>
-          Free for the first 30 days
+          fRender Free
         </div>
         <h1 id="hero-headline">
-          Deterministic audio<br>
-          <span>→</span> video publishing.
+          Render album videos from audio files. Fast and clean.
         </h1>
         <p class="hero-sub">
-          Static cover. 1&nbsp;FPS. Batch export.<br>No surprises.
+          fRender Free exports 1 file at a time. No setup. No accounts.
         </p>
-        <div class="hero-cta">
-          <a href="#download" class="btn btn-primary">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M8 1a5.5 5.5 0 0 1 3.91 9.39c.28.14.55.3.79.48A7 7 0 1 0 8 15a6.97 6.97 0 0 0 4.7-1.81 4.5 4.5 0 0 0-.79-.48A5.5 5.5 0 1 1 8 1z" fill="currentColor"/>
-              <path d="M7.25 9.56V4.5h1.5v5.06l1.72-1.72 1.06 1.06L8 12.44l-3.53-3.54 1.06-1.06 1.72 1.72z" fill="currentColor"/>
-            </svg>
-            Download for Mac
-          </a>
-          <a href="#download" class="btn btn-secondary">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M7.25 9.56V4.5h1.5v5.06l1.72-1.72 1.06 1.06L8 12.44l-3.53-3.54 1.06-1.06 1.72 1.72z" fill="currentColor"/>
-            </svg>
-            Download for Windows
-          </a>
+        <ul class="hero-bullets">
+          <li>Drop your tracks</li>
+          <li>Set artwork</li>
+          <li>Export clean video</li>
+        </ul>
+        <div class="hero-action-group">
+          <div class="hero-cta">
+            <a href="#download" class="btn btn-primary">Download fRender Free</a>
+          </div>
+          <p class="hero-note">
+            macOS • Apple Silicon &amp; Intel
+          </p>
         </div>
-        <p class="hero-note">
-          <span>Requires a cover image.</span>&ensp;Fully offline.&ensp;Publish-grade output.
-        </p>
       </section>
     </div>
 
@@ -752,7 +779,7 @@
     <!-- ─── Download ──────────────────────────────────────────────── -->
     <section id="download" aria-labelledby="download-heading">
       <div class="container">
-        <h3 id="download-heading">Download</h3>
+        <h3 id="download-heading">Download fRender Free</h3>
         <div class="download-grid">
 
           <!-- Mac -->
@@ -784,37 +811,6 @@
             <p class="download-meta">Open the .dmg and drag fRender to Applications.</p>
           </div>
 
-          <!-- Windows -->
-          <div class="download-card">
-            <div class="download-card-os">
-              <div class="os-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M3 5.6L10.5 4.5V11.5H3V5.6z" fill="#e8edf8" opacity=".5"/>
-                  <path d="M11.5 4.35L21 3V11.5H11.5V4.35z" fill="#e8edf8" opacity=".7"/>
-                  <path d="M3 12.5H10.5V19.5L3 18.4V12.5z" fill="#e8edf8" opacity=".5"/>
-                  <path d="M11.5 12.5H21V21L11.5 19.65V12.5z" fill="#e8edf8" opacity=".7"/>
-                </svg>
-              </div>
-              <div>
-                <div class="download-card-os-label">Windows</div>
-                <div class="download-card-os-sub">Windows 10 / 11 (x64)</div>
-              </div>
-            </div>
-            <div class="download-links">
-              <a class="download-link"
-                 href="https://github.com/Rickeeh/Album-to-Video/releases/latest">
-                <span class="download-link-label">Windows (Setup)</span>
-                <span class="download-link-arrow" aria-hidden="true">↓ .exe</span>
-              </a>
-              <a class="download-link"
-                 href="https://github.com/Rickeeh/Album-to-Video/releases/latest">
-                <span class="download-link-label">Windows (Portable)</span>
-                <span class="download-link-arrow" aria-hidden="true">↓ .exe</span>
-              </a>
-            </div>
-            <p class="download-meta">Run Setup to install, or Portable to use directly — no install needed.</p>
-          </div>
-
         </div>
 
         <p class="download-footer-note">
@@ -833,70 +829,70 @@
 
           <div>
             <h3 id="what-heading">What it does</h3>
-            <div class="fact-list">
-              <div class="fact-item">
+            <ul class="fact-list">
+              <li class="fact-item">
                 <div class="fact-icon fact-icon-check" aria-hidden="true">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </div>
                 <p class="fact-text">Turns audio files into MP4 using a single static cover image.</p>
-              </div>
-              <div class="fact-item">
+              </li>
+              <li class="fact-item">
                 <div class="fact-icon fact-icon-check" aria-hidden="true">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </div>
                 <p class="fact-text">Exports consistently (1&nbsp;FPS, CFR), ready to publish.</p>
-              </div>
-              <div class="fact-item">
+              </li>
+              <li class="fact-item">
                 <div class="fact-icon fact-icon-check" aria-hidden="true">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </div>
                 <p class="fact-text">Batch workflows for albums, EPs, and episodes.</p>
-              </div>
-            </div>
+              </li>
+            </ul>
           </div>
 
           <div>
             <h3>What it doesn't do</h3>
-            <div class="fact-list">
-              <div class="fact-item">
+            <ul class="fact-list">
+              <li class="fact-item">
                 <div class="fact-icon fact-icon-cross" aria-hidden="true">
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path d="M11 3L3 11M3 3l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                   </svg>
                 </div>
                 <p class="fact-text">Not a video editor.</p>
-              </div>
-              <div class="fact-item">
+              </li>
+              <li class="fact-item">
                 <div class="fact-icon fact-icon-cross" aria-hidden="true">
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path d="M11 3L3 11M3 3l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                   </svg>
                 </div>
                 <p class="fact-text">No animations. No motion.</p>
-              </div>
-              <div class="fact-item">
+              </li>
+              <li class="fact-item">
                 <div class="fact-icon fact-icon-cross" aria-hidden="true">
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path d="M11 3L3 11M3 3l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                   </svg>
                 </div>
                 <p class="fact-text">No technical knobs — codecs, fps, or bitrates are handled automatically.</p>
-              </div>
-              <div class="fact-item">
+              </li>
+              <li class="fact-item">
                 <div class="fact-icon fact-icon-cross" aria-hidden="true">
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path d="M11 3L3 11M3 3l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                   </svg>
                 </div>
                 <p class="fact-text">No cloud dependency. Everything runs offline.</p>
-              </div>
-            </div>
+              </li>
+            </ul>
           </div>
 
         </div>
@@ -963,8 +959,8 @@
       <div class="container">
         <h3 id="support-heading">Support &amp; logs</h3>
         <div class="support-block">
-          <h4 style="font-size:1.1rem; font-weight:600; color:var(--text-1); margin-bottom:6px;">Where are my log files?</h4>
-          <p style="font-size:0.85rem; color:var(--text-2);">If something goes wrong, log files and render reports contain everything needed to diagnose the issue.</p>
+          <h4 class="support-title">Where are my log files?</h4>
+          <p class="support-subtitle">If something goes wrong, log files and render reports contain everything needed to diagnose the issue.</p>
 
           <div class="support-cols">
             <div>
@@ -973,13 +969,6 @@
                 ~/Library/Logs/<br>
                 fRender/<br>
                 (legacy folder names may appear in current builds)
-              </div>
-            </div>
-            <div>
-              <div class="support-os-label">Windows</div>
-              <div class="support-path">
-                %APPDATA%\fRender\<br>
-                (legacy "Album to Video" subfolders may appear in current builds)
               </div>
             </div>
           </div>
