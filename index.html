@@ -327,6 +327,26 @@
       text-align: center;
     }
 
+    .hero-arch-links {
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--text-3);
+    }
+
+    .hero-arch-links a {
+      color: var(--text-2);
+      text-decoration: none;
+    }
+
+    .hero-arch-links a:hover {
+      color: var(--text-1);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
     .hero-note span {
       color: var(--text-2);
     }
@@ -765,10 +785,15 @@
         </ul>
         <div class="hero-action-group">
           <div class="hero-cta">
-            <a href="#download" class="btn btn-primary">Download fRender Free</a>
+            <a href="./release/mac/fRender-Free-1.0.0-mac-arm64.dmg" class="btn btn-primary">Download fRender Free</a>
           </div>
           <p class="hero-note">
             macOS • Apple Silicon &amp; Intel
+          </p>
+          <p class="hero-arch-links">
+            <a href="./release/mac/fRender-Free-1.0.0-mac-arm64.dmg">Apple Silicon (recommended)</a>
+            <span aria-hidden="true">•</span>
+            <a href="./release/mac/fRender-Free-1.0.0-mac-x64.dmg">Intel Macs</a>
           </p>
         </div>
       </section>
@@ -798,13 +823,13 @@
             </div>
             <div class="download-links">
               <a class="download-link"
-                 href="https://github.com/Rickeeh/Album-to-Video/releases/latest">
-                <span class="download-link-label">Mac (Apple Silicon)</span>
+                 href="./release/mac/fRender-Free-1.0.0-mac-arm64.dmg">
+                <span class="download-link-label">Apple Silicon (recommended)</span>
                 <span class="download-link-arrow" aria-hidden="true">↓ .dmg</span>
               </a>
               <a class="download-link"
-                 href="https://github.com/Rickeeh/Album-to-Video/releases/latest">
-                <span class="download-link-label">Mac (Intel)</span>
+                 href="./release/mac/fRender-Free-1.0.0-mac-x64.dmg">
+                <span class="download-link-label">Intel Macs</span>
                 <span class="download-link-arrow" aria-hidden="true">↓ .dmg</span>
               </a>
             </div>
