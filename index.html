@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>fRender Free — Audio to Video for macOS</title>
-  <meta name="description" content="Render album videos from audio files. Fast and clean. fRender Free exports 1 file at a time. No setup. No accounts." />
-  <meta property="og:title" content="fRender Free — Audio to Video for macOS" />
-  <meta property="og:description" content="fRender Free exports 1 file at a time. No setup. No accounts. macOS for Apple Silicon and Intel." />
+  <title>fRender Free — Audio to Video for macOS and Windows</title>
+  <meta name="description" content="Render album videos from audio files. Fast and clean. fRender Free exports 1 file at a time. No setup. No accounts. macOS and Windows." />
+  <meta property="og:title" content="fRender Free — Audio to Video for macOS and Windows" />
+  <meta property="og:description" content="fRender Free exports 1 file at a time. No setup. No accounts. macOS and Windows." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://frender.app" />
   <meta property="og:site_name" content="fRender" />
   <meta property="og:image" content="https://frender.app/og.png" />
   <meta property="og:image:alt" content="fRender landing page preview" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="fRender Free — Audio to Video for macOS" />
-  <meta name="twitter:description" content="fRender Free exports 1 file at a time. No setup. No accounts." />
+  <meta name="twitter:title" content="fRender Free — Audio to Video for macOS and Windows" />
+  <meta name="twitter:description" content="fRender Free exports 1 file at a time. No setup. No accounts. macOS and Windows." />
   <meta name="twitter:image" content="https://frender.app/og.png" />
   <meta name="theme-color" content="#080a0e" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0c10'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='monospace' font-size='17' font-weight='700' fill='%23c8d8f0'%3Ef%3C/text%3E%3C/svg%3E" />
@@ -311,6 +311,11 @@
 
     .btn-primary:hover { opacity: 0.88; }
 
+    .hero-primary-download {
+      justify-content: center;
+      min-width: 220px;
+    }
+
     .btn-secondary {
       background: var(--bg-panel);
       color: var(--text-1);
@@ -331,6 +336,8 @@
       margin: 0;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
       gap: 8px;
       font-size: 0.78rem;
       color: var(--text-3);
@@ -379,6 +386,7 @@
       border: 1px solid var(--line);
       border-radius: var(--radius-lg);
       padding: 28px;
+      scroll-margin-top: 84px;
     }
 
     .download-card-os {
@@ -785,15 +793,17 @@
         </ul>
         <div class="hero-action-group">
           <div class="hero-cta">
-            <a href="https://github.com/Rickeeh/Album-to-Video/releases/download/v1.0.0-mac-release-ready/fRender-Free-1.0.0-mac-arm64.dmg" class="btn btn-primary">Download fRender Free</a>
+            <a id="primary-download-link" href="#download" class="btn btn-primary hero-primary-download">Download fRender Free</a>
           </div>
           <p class="hero-note">
-            macOS • Apple Silicon &amp; Intel
+            macOS and Windows
           </p>
           <p class="hero-arch-links">
-            <a href="https://github.com/Rickeeh/Album-to-Video/releases/download/v1.0.0-mac-release-ready/fRender-Free-1.0.0-mac-arm64.dmg">Apple Silicon (recommended)</a>
+            <a href="https://github.com/Rickeeh/Album-to-Video/releases/download/v1.0.0-mac-release-ready/fRender-Free-1.0.0-mac-arm64.dmg">Mac (Apple Silicon)</a>
             <span aria-hidden="true">•</span>
-            <a href="https://github.com/Rickeeh/Album-to-Video/releases/download/v1.0.0-mac-release-ready/fRender-Free-1.0.0-mac-x64.dmg">Intel Macs</a>
+            <a href="https://github.com/Rickeeh/Album-to-Video/releases/download/v1.0.0-mac-release-ready/fRender-Free-1.0.0-mac-x64.dmg">Mac (Intel)</a>
+            <span aria-hidden="true">•</span>
+            <a href="#download-windows">Windows</a>
           </p>
         </div>
       </section>
@@ -808,7 +818,7 @@
         <div class="download-grid">
 
           <!-- Mac -->
-          <div class="download-card">
+          <div class="download-card" id="download-mac">
             <div class="download-card-os">
               <div class="os-icon" aria-hidden="true">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -834,6 +844,33 @@
               </a>
             </div>
             <p class="download-meta">Open the .dmg and drag fRender to Applications.</p>
+          </div>
+
+          <div class="download-card" id="download-windows">
+            <div class="download-card-os">
+              <div class="os-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M3 5.2 10.4 4v7H3V5.2Zm8.6-1.34L21 2.5V11h-9V3.86ZM3 12.96h7.4V20L3 18.78v-5.82Zm8.6 0H21v8.5L11.6 20v-7.04Z" fill="#e8edf8" opacity=".7"/>
+                </svg>
+              </div>
+              <div>
+                <div class="download-card-os-label">Windows</div>
+                <div class="download-card-os-sub">Windows 10 or later</div>
+              </div>
+            </div>
+            <div class="download-links">
+              <a class="download-link"
+                 href="https://github.com/Rickeeh/Album-to-Video/releases/download/v1.0.0/fRender-1.0.0-win-x64-setup.exe">
+                <span class="download-link-label">Setup</span>
+                <span class="download-link-arrow" aria-hidden="true">↓ .exe</span>
+              </a>
+              <a class="download-link"
+                 href="https://github.com/Rickeeh/Album-to-Video/releases/download/v1.0.0/fRender-1.0.0-win-x64-portable.exe">
+                <span class="download-link-label">Portable</span>
+                <span class="download-link-arrow" aria-hidden="true">↓ .exe</span>
+              </a>
+            </div>
+            <p class="download-meta">Setup installs normally. Portable runs without installation.</p>
           </div>
 
         </div>
@@ -1028,6 +1065,47 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    (function () {
+      const primaryDownloadLink = document.getElementById('primary-download-link');
+      if (!primaryDownloadLink) return;
+
+      function detectPlatform(nav) {
+        const userAgentDataPlatform = typeof nav.userAgentData?.platform === 'string'
+          ? nav.userAgentData.platform
+          : '';
+        const platform = typeof nav.platform === 'string' ? nav.platform : '';
+        const userAgent = typeof nav.userAgent === 'string' ? nav.userAgent : '';
+        const source = (userAgentDataPlatform || platform || userAgent).toLowerCase();
+
+        if (source.includes('mac')) return 'mac';
+        if (source.includes('win')) return 'windows';
+        return 'other';
+      }
+
+      const ctaByPlatform = {
+        mac: {
+          href: '#download-mac',
+          label: 'Download for Mac',
+        },
+        windows: {
+          href: 'https://github.com/Rickeeh/Album-to-Video/releases/download/v1.0.0/fRender-1.0.0-win-x64-setup.exe',
+          label: 'Download for Windows',
+        },
+        other: {
+          href: '#download',
+          label: 'Download fRender Free',
+        },
+      };
+
+      const platform = detectPlatform(window.navigator);
+      const cta = ctaByPlatform[platform] || ctaByPlatform.other;
+
+      primaryDownloadLink.href = cta.href;
+      primaryDownloadLink.textContent = cta.label;
+    })();
+  </script>
 
 </body>
 </html>
